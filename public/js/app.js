@@ -1901,15 +1901,17 @@ function showToast(msg) {
 })();
 
 /* =========================================================
-   KARIGAR AI - AUTHENTICATION SYSTEM
+   KARIGAR AI - SIMPLE AUTH
+   NAME + EMAIL ONLY
+   NO OTP
    ========================================================= */
 
 let karigarPendingUser = null;
 
 
-/* ---------------------------------------------------------
-   CHECK LOGIN WHEN WEBSITE OPENS
-   --------------------------------------------------------- */
+/* =========================================================
+   CHECK LOGIN
+   ========================================================= */
 
 (function checkKarigarAuthentication() {
 
@@ -1924,13 +1926,9 @@ let karigarPendingUser = null;
       localStorage.getItem('karigar_logged_in');
 
     if (loggedIn === 'true') {
-
       authScreen.style.display = 'none';
-
     } else {
-
       authScreen.style.display = 'flex';
-
     }
 
   }
@@ -1951,424 +1949,278 @@ let karigarPendingUser = null;
 })();
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    SHOW SIGN UP
-   --------------------------------------------------------- */
+   ========================================================= */
 
 function showKarigarSignup() {
 
-  document.getElementById('signupBox').style.display = 'block';
+  const signupBox =
+    document.getElementById('signupBox');
 
-  document.getElementById('loginBox').style.display = 'none';
+  const loginBox =
+    document.getElementById('loginBox');
 
-  document.getElementById('otpBox').style.display = 'none';
+  const otpBox =
+    document.getElementById('otpBox');
+
+  if (signupBox)
+    signupBox.style.display = 'block';
+
+  if (loginBox)
+    loginBox.style.display = 'none';
+
+  if (otpBox)
+    otpBox.style.display = 'none';
 
   clearAuthError();
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    SHOW LOGIN
-   --------------------------------------------------------- */
+   ========================================================= */
 
 function showKarigarLogin() {
 
-  document.getElementById('signupBox').style.display = 'none';
+  const signupBox =
+    document.getElementById('signupBox');
 
-  document.getElementById('loginBox').style.display = 'block';
+  const loginBox =
+    document.getElementById('loginBox');
 
-  document.getElementById('otpBox').style.display = 'none';
+  const otpBox =
+    document.getElementById('otpBox');
+
+  if (signupBox)
+    signupBox.style.display = 'none';
+
+  if (loginBox)
+    loginBox.style.display = 'block';
+
+  if (otpBox)
+    otpBox.style.display = 'none';
 
   clearAuthError();
 
 }
 
 
-/* ---------------------------------------------------------
-   START SIGN UP
-   --------------------------------------------------------- */
+/* =========================================================
+   DIRECT SIGNUP
+   NAME + EMAIL ONLY
+   ========================================================= */
 
-async function startKarigarSignup() {
+function startKarigarSignup() {
 
-  const name =
-    document.getElementById('authName').value.trim();
+  const nameInput =
+    document.getElementById('authName');
 
-  const email =
-    document.getElementById('authEmail').value.trim();
+  const emailInput =
+    document.getElementById('authEmail');
 
-  const phone =
-    document.getElementById('authPhone').value.trim();
-
-  const role =
-    document.getElementById('authRole').value;
-
-  const craft =
-    document.getElementById('authCraft').value.trim();
-
-  const language =
-    document.getElementById('authLanguage').value;
-
-
-  if (!name || !email || !phone ||
-      !role || !craft || !language) {
+  if (!nameInput || !emailInput) {
 
     showAuthError(
-      'Please fill in all the details.'
+      'Signup fields not found.'
     );
 
     return;
+
+  }
+
+  const name =
+    nameInput.value.trim();
+
+  const email =
+    emailInput.value.trim();
+
+
+  /* NAME VALIDATION */
+
+  if (!name) {
+
+    showAuthError(
+      'Please enter your name.'
+    );
+
+    nameInput.focus();
+
+    return;
+
   }
 
 
-  if (!email.includes('@')) {
+  /* EMAIL VALIDATION */
+
+  if (!email) {
+
+    showAuthError(
+      'Please enter your email.'
+    );
+
+    emailInput.focus();
+
+    return;
+
+  }
+
+
+  if (
+    !email.includes('@') ||
+    !email.includes('.')
+  ) {
 
     showAuthError(
       'Please enter a valid email address.'
     );
 
+    emailInput.focus();
+
     return;
+
   }
 
 
-  if (phone.length < 10) {
+  /* CREATE USER */
 
-    showAuthError(
-      'Please enter a valid mobile number.'
-    );
+  const user = {
 
-    return;
-  }
+    name: name,
 
-
-  karigarPendingUser = {
-
-    name,
-    email,
-    phone,
-    role,
-    craft,
-    language
+    email: email
 
   };
 
 
-  try {
-
-    showAuthMessage(
-      'Sending verification code...'
-    );
+  karigarPendingUser = user;
 
 
-    const response = await fetch(
-      '/api/auth/send-otp',
-      {
+  /* SAVE LOGIN */
 
-        method: 'POST',
-
-        headers: {
-          'Content-Type': 'application/json'
-        },
-
-        body: JSON.stringify(
-          karigarPendingUser
-        )
-
-      }
-    );
-
-
-    const responseText = await response.text();
-
-let data;
-
-try {
-  data = JSON.parse(responseText);
-} catch (error) {
-  console.error('Server returned:', responseText);
-
-  throw new Error(
-    'OTP server route is not responding correctly. Please restart the server.'
+  localStorage.setItem(
+    'karigar_logged_in',
+    'true'
   );
-}
 
-if (!response.ok) {
+  localStorage.setItem(
+    'karigar_user',
+    JSON.stringify(user)
+  );
 
-      throw new Error(
-        data.message ||
-        'Could not send verification code.'
-      );
-
-    }
-
-
-    document.getElementById('signupBox')
-      .style.display = 'none';
-
-    document.getElementById('loginBox')
-      .style.display = 'none';
-
-    document.getElementById('otpBox')
-      .style.display = 'block';
+  localStorage.setItem(
+    'karigarUser',
+    JSON.stringify(user)
+  );
 
 
-    document.getElementById('otpMessage')
-      .textContent =
-      `We sent a verification code to ${email}.`;
+  /* HIDE AUTH SCREEN */
+
+  const authScreen =
+    document.getElementById('authScreen');
+
+  if (authScreen) {
+
+    authScreen.style.display = 'none';
+
+  }
 
 
-    clearAuthError();
+  /* ALWAYS HIDE OTP */
+
+  const otpBox =
+    document.getElementById('otpBox');
+
+  if (otpBox) {
+
+    otpBox.style.display = 'none';
+
+  }
 
 
-  } catch (error) {
+  /* SUCCESS */
 
-    console.error(
-      'OTP error:',
-      error
+  if (typeof showToast === 'function') {
+
+    showToast(
+      `Welcome to Karigar AI, ${name}!`
     );
 
-    showAuthError(
-      error.message ||
-      'Unable to send OTP.'
+  } else {
+
+    alert(
+      `✅ Welcome to Karigar AI, ${name}!`
     );
 
   }
 
-}
 
-
-/* ---------------------------------------------------------
-   VERIFY OTP
-   --------------------------------------------------------- */
-
-async function verifyKarigarOTP() {
-
-  const otp =
-    document.getElementById('authOtp')
-      .value.trim();
-
-
-  if (!otp || otp.length !== 6) {
-
-    showAuthError(
-      'Please enter the 6-digit OTP.'
-    );
-
-    return;
-  }
-
-
-  if (!karigarPendingUser) {
-
-    showAuthError(
-      'Your signup session expired. Please try again.'
-    );
-
-    showKarigarSignup();
-
-    return;
-  }
-
-
-  try {
-
-    showAuthMessage(
-      'Verifying your account...'
-    );
-
-
-    const response = await fetch(
-      '/api/auth/verify-otp',
-      {
-
-        method: 'POST',
-
-        headers: {
-          'Content-Type': 'application/json'
-        },
-
-        body: JSON.stringify({
-
-          email: karigarPendingUser.email,
-
-          otp: otp,
-
-          user: karigarPendingUser
-
-        })
-
-      }
-    );
-
-
-    const data =
-      await response.json();
-
-    if (data.success && data.user) {
-    // Save the verified Karigar account
-    localStorage.setItem(
-        'karigarUser',
-        JSON.stringify(data.user)
-    );
-
-    console.log('✅ Logged-in Karigar:', data.user);
-}
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.message ||
-        'Invalid OTP.'
-      );
-
-    }
-
-
-    localStorage.setItem(
-      'karigar_logged_in',
-      'true'
-    );
-
-
-    localStorage.setItem(
-      'karigar_user',
-      JSON.stringify(
-        karigarPendingUser
-      )
-    );
-
-    alert("✅ Account created successfully!");
-
-
-    const authScreen =
-      document.getElementById('authScreen');
-
-
-    if (authScreen) {
-
-      authScreen.style.display =
-        'none';
-
-    }
-
-
-    if (typeof showToast === 'function') {
-
-      showToast(
-        `Welcome to Karigar AI, ${karigarPendingUser.name}!`
-      );
-
-    }
-
-
-    karigarPendingUser = null;
-
-
-  } catch (error) {
-
-    console.error(
-      'Verification error:',
-      error
-    );
-
-    showAuthError(
-      error.message ||
-      'OTP verification failed.'
-    );
-
-  }
+  karigarPendingUser = null;
 
 }
 
 
-/* ---------------------------------------------------------
-   RESEND OTP
-   --------------------------------------------------------- */
+/* =========================================================
+   OTP COMPLETELY DISABLED
+   ========================================================= */
 
-async function resendKarigarOTP() {
+function verifyKarigarOTP() {
 
-  if (!karigarPendingUser) {
-
-    showAuthError(
-      'Signup session expired.'
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    const response = await fetch(
-      '/api/auth/send-otp',
-      {
-
-        method: 'POST',
-
-        headers: {
-          'Content-Type': 'application/json'
-        },
-
-        body: JSON.stringify(
-          karigarPendingUser
-        )
-
-      }
-    );
-
-
-    const data =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.message ||
-        'Could not resend OTP.'
-      );
-
-    }
-
-
-    showAuthMessage(
-      'A new OTP has been sent.'
-    );
-
-
-  } catch (error) {
-
-    showAuthError(
-      error.message ||
-      'Could not resend OTP.'
-    );
-
-  }
+  console.log(
+    'OTP verification disabled.'
+  );
 
 }
 
 
-/* ---------------------------------------------------------
+function resendKarigarOTP() {
+
+  console.log(
+    'OTP resend disabled.'
+  );
+
+}
+
+
+/* =========================================================
    LOGIN
-   --------------------------------------------------------- */
+   ========================================================= */
 
 async function karigarLogin() {
 
+  const emailInput =
+    document.getElementById('loginEmail');
+
+  const passwordInput =
+    document.getElementById('loginPassword');
+
   const email =
-    document.getElementById('loginEmail')
-      .value.trim();
+    emailInput
+      ? emailInput.value.trim()
+      : '';
 
   const password =
-    document.getElementById('loginPassword')
-      .value;
+    passwordInput
+      ? passwordInput.value
+      : '';
 
 
-  if (!email || !password) {
+  if (!email) {
 
     showAuthError(
-      'Enter your email and password.'
+      'Please enter your email.'
+    );
+
+    return;
+
+  }
+
+
+  if (!password) {
+
+    showAuthError(
+      'Please enter your password.'
     );
 
     return;
@@ -2378,23 +2230,25 @@ async function karigarLogin() {
 
   try {
 
-    const response = await fetch(
-      '/api/auth/login',
-      {
+    const response =
+      await fetch(
+        '/api/auth/login',
+        {
 
-        method: 'POST',
+          method: 'POST',
 
-        headers: {
-          'Content-Type': 'application/json'
-        },
+          headers: {
+            'Content-Type':
+              'application/json'
+          },
 
-        body: JSON.stringify({
-          email,
-          password
-        })
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
 
-      }
-    );
+        }
+      );
 
 
     const data =
@@ -2420,14 +2274,34 @@ async function karigarLogin() {
     localStorage.setItem(
       'karigar_user',
       JSON.stringify(
-        data.user || { email }
+        data.user || {
+          email: email
+        }
       )
     );
 
 
-    document.getElementById(
-      'authScreen'
-    ).style.display = 'none';
+    localStorage.setItem(
+      'karigarUser',
+      JSON.stringify(
+        data.user || {
+          email: email
+        }
+      )
+    );
+
+
+    const authScreen =
+      document.getElementById(
+        'authScreen'
+      );
+
+    if (authScreen) {
+
+      authScreen.style.display =
+        'none';
+
+    }
 
 
     if (typeof showToast === 'function') {
@@ -2441,6 +2315,11 @@ async function karigarLogin() {
 
   } catch (error) {
 
+    console.error(
+      'Login error:',
+      error
+    );
+
     showAuthError(
       error.message ||
       'Login failed.'
@@ -2451,64 +2330,137 @@ async function karigarLogin() {
 }
 
 
-/* ---------------------------------------------------------
-   AUTH UI HELPERS
-   --------------------------------------------------------- */
+/* =========================================================
+   AUTH ERROR
+   ========================================================= */
 
 function showAuthError(message) {
 
   const box =
-    document.getElementById('authError');
+    document.getElementById(
+      'authError'
+    );
 
   if (box) {
 
-    box.textContent = message;
+    box.style.color =
+      '#c0392b';
+
+    box.textContent =
+      message;
 
   }
 
 }
 
+
+/* =========================================================
+   AUTH MESSAGE
+   ========================================================= */
 
 function showAuthMessage(message) {
 
   const box =
-    document.getElementById('authError');
+    document.getElementById(
+      'authError'
+    );
 
   if (box) {
 
-    box.style.color = '#8b5e34';
+    box.style.color =
+      '#8b5e34';
 
-    box.textContent = message;
+    box.textContent =
+      message;
 
   }
 
 }
 
 
+/* =========================================================
+   CLEAR ERROR
+   ========================================================= */
+
 function clearAuthError() {
 
   const box =
-    document.getElementById('authError');
+    document.getElementById(
+      'authError'
+    );
 
   if (box) {
 
     box.textContent = '';
 
-    box.style.color = '#c0392b';
+    box.style.color =
+      '#c0392b';
 
   }
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    LOGOUT
-   --------------------------------------------------------- */
+   ========================================================= */
 
 function karigarLogout() {
-  localStorage.removeItem('karigar_logged_in');
-  localStorage.removeItem('karigar_user');
-  localStorage.removeItem('karigarUser');
+
+  localStorage.removeItem(
+    'karigar_logged_in'
+  );
+
+  localStorage.removeItem(
+    'karigar_user'
+  );
+
+  localStorage.removeItem(
+    'karigarUser'
+  );
 
   location.reload();
+
 }
+
+
+/* =========================================================
+   FORCE OTP BOX HIDDEN
+   ========================================================= */
+
+(function disableOTPUI() {
+
+  function hideOTP() {
+
+    const otpBox =
+      document.getElementById(
+        'otpBox'
+      );
+
+    if (otpBox) {
+
+      otpBox.style.display =
+        'none';
+
+    }
+
+  }
+
+
+  if (
+    document.readyState ===
+    'loading'
+  ) {
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      hideOTP
+    );
+
+  } else {
+
+    hideOTP();
+
+  }
+
+})();
