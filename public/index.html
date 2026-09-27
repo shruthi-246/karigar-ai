@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Karigar AI — Voice-First Multilingual AI Agent for Indian Artisans</title>
+  <meta name="description" content="Turn spoken craft details into verified, marketplace-ready digital listings for Indian artisans across 80+ languages.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- =====================================================
+     KARIGAR AI - LOGIN / SIGN UP GATE
+     ===================================================== -->
+
+<div id="authScreen" class="auth-screen">
+
+  <div class="auth-card">
+
+    <div class="auth-logo">🧵</div>
+
+    <h1>Karigar AI</h1>
+
+    <p class="auth-subtitle">
+      Your voice-first AI assistant for handmade crafts
+    </p>
+
+    <!-- SIGN UP -->
+    <div id="signupBox">
+
+      <h2>Create Your Account</h2>
+
+      <p class="auth-small">
+        Tell us a little about yourself to get started.
+      </p>
+
+      <input
+        type="text"
+        id="authName"
+        class="auth-input"
+        placeholder="Full Name"
+      >
+
+      <input
+        type="email"
+        id="authEmail"
+        class="auth-input"
+        placeholder="Email Address"
+      >
+
+      <input
+        type="tel"
+        id="authPhone"
+        class="auth-input"
+        placeholder="Mobile Number"
+      >
+
+      <select id="authRole" class="auth-input">
+        <option value="">What do you do?</option>
+        <option value="Artisan">Artisan</option>
+        <option value="Craft Collective">Craft Collective</option>
+        <option value="Self Help Group">Self Help Group</option>
+        <option value="NGO">NGO</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <input
+        type="text"
+        id="authCraft"
+        class="auth-input"
+        placeholder="What craft do you create?"
+      >
+
+      <select id="authLanguage" class="auth-input">
+        <option value="">Preferred Language</option>
+        <option value="Tamil">தமிழ் - Tamil</option>
+        <option value="Hindi">हिन्दी - Hindi</option>
+        <option value="Telugu">తెలుగు - Telugu</option>
+        <option value="Kannada">ಕನ್ನಡ - Kannada</option>
+        <option value="Malayalam">മലയാളം - Malayalam</option>
+        <option value="English">English</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <button
+        type="button"
+        class="auth-button"
+        onclick="startKarigarSignup()"
+      >
+        Continue
+      </button>
+
+      <p class="auth-switch">
+        Already have an account?
+        <button onclick="showKarigarLogin()">
+          Sign In
+        </button>
+      </p>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div id="loginBox" style="display:none;">
+
+      <h2>Welcome Back 👋</h2>
+
+      <p class="auth-small">
+        Sign in to continue to Karigar AI.
+      </p>
+
+      <input
+        type="email"
+        id="loginEmail"
+        class="auth-input"
+        placeholder="Email Address"
+      >
+
+      <input
+        type="password"
+        id="loginPassword"
+        class="auth-input"
+        placeholder="Password"
+      >
+
+      <button
+        type="button"
+        class="auth-button"
+        onclick="karigarLogin()"
+      >
+        Sign In
+      </button>
+
+      <p class="auth-switch">
+        Don't have an account?
+        <button onclick="showKarigarSignup()">
+          Create Account
+        </button>
+      </p>
+
+    </div>
+
+
+    <!-- OTP -->
+
+    <div id="otpBox" style="display:none;">
+
+      <h2>Verify Your Account 🔐</h2>
+
+      <p id="otpMessage" class="auth-small">
+        We sent a verification code.
+      </p>
+
+      <input
+        type="text"
+        id="authOtp"
+        class="auth-input otp-input"
+        placeholder="Enter 6-digit OTP"
+        maxlength="6"
+      >
+
+      <button
+        type="button"
+        class="auth-button"
+        onclick="verifyKarigarOTP()"
+      >
+        Verify OTP
+      </button>
+
+      <button
+        type="button"
+        class="auth-resend"
+        onclick="resendKarigarOTP()"
+      >
+        Resend OTP
+      </button>
+
+    </div>
+
+    <p id="authError" class="auth-error"></p>
+
+  </div>
+
+</div>
+
+<div class="app-container">
+  <!-- SMART DEMO & OFFLINE BAR -->
+  <aside class="smart-demo-bar" aria-label="Quick Access Bar">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span class="demo-bar-badge">⚡ Hackathon Guided Tour</span>
+      <span style="font-size:13px;">Experience the end-to-end artisan journey in 60 seconds:</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-demo-trigger" onclick="runSmartDemoMode()">
+        <span>▶</span> Run 1-Click Smart Demo
+      </button>
+      <button class="btn-demo-trigger" style="background:rgba(255,255,255,0.15);color:#fff;" onclick="openMemoryModal()">
+        <span>🧠</span> Craft Memory
+      </button>
+    </div>
+  </aside>
+
+  <!-- TOP APP BAR -->
+  <header class="top-bar">
+    <div class="brand-mark">
+      <div class="logo-seal">क</div>
+      <div class="brand-titles">
+        <h1>Karigar AI <span class="brand-hindi">कारीगर एआई</span></h1>
+        <p class="brand-tagline">Voice-First Multilingual Listing Agent • 80+ Languages</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="status-badge" id="aiStatusBadge">
+        <span class="status-dot"></span>
+        <span>AI Engine Ready</span>
+      </div>
+      <button class="btn-lang-trigger" onclick="openLanguageModal('voice')" title="Select Voice Dialect">
+        <span>🗣️ Spoken:</span>
+        <strong id="currentVoiceLangLabel">Hindi (हिन्दी)</strong>
+        <span style="font-size:11px;opacity:0.7;">▼</span>
+      </button>
+      <button class="btn-lang-trigger" onclick="openLanguageModal('target')" title="Select Marketplace Language">
+        <span>🌐 Listing:</span>
+        <strong id="currentTargetLangLabel">English (Global)</strong>
+        <span style="font-size:11px;opacity:0.7;">▼</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN NAVIGATION TABS -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="nav-btn active" id="tab-dashboard" onclick="showView('dashboard')">
+      <span>🏠</span> Dashboard
+    </button>
+    <button class="nav-btn special-create" id="tab-create" onclick="showView('create')">
+      <span>🎙️</span> Create Listing
+    </button>
+    <button class="nav-btn" id="tab-twin" onclick="showView('twin')">
+      <span>🧬</span> Craft Digital Twin
+    </button>
+    <button class="nav-btn" id="tab-studio" onclick="showView('studio')">
+      <span>🪄</span> AI Listing Studio
+    </button>
+    <button class="nav-btn" id="tab-pricing" onclick="showView('pricing')">
+      <span>⚖️</span> Fair Price Assistant
+    </button>
+    <button class="nav-btn" id="tab-marketing" onclick="showView('marketing')">
+      <span>📣</span> Marketing Studio
+    </button>
+    <button class="nav-btn" id="tab-products" onclick="showView('products')">
+      <span>🏺</span> Craft Library
+    </button>
+    <button class="nav-btn" id="tab-profile" onclick="showView('profile')">
+      <span>👤</span> Artisan Profile
+    </button>
+  </nav>
+
+  <!-- ========================================== -->
+  <!-- 1. DASHBOARD VIEW -->
+  <!-- ========================================== -->
+  <section class="view-screen active" id="view-dashboard">
+    <div class="card" style="background:linear-gradient(135deg, #1B4332 0%, #245741 100%);color:#FFFFFF;border:1px solid rgba(212,163,115,0.3);position:relative;overflow:hidden;padding:32px 28px;">
+      <div style="color:var(--gold-accent);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+        ✨ Speak Your Craft • Karigar AI Does The Digital Work
+      </div>
+      <h2 style="color:#FFFFFF;font-size:clamp(24px, 4vw, 32px);margin-bottom:10px;">
+        "No digital literacy barrier. Speak in your mother tongue, get verified global listings."
+      </h2>
+      <p style="color:#DDE7E2;font-size:14.5px;max-width:680px;line-height:1.6;margin-bottom:20px;">
+        Designed specifically for Indian craft clusters. Karigar AI listens to natural artisan speech, extracts 10 verified attributes, safeguards against illegal marketplace claims, and builds a permanent Digital Twin for your craft.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn-demo-trigger" style="background:var(--terracotta);color:#fff;padding:12px 22px;font-size:14.5px;" onclick="showView('create')">
+          <span>🎙️</span> Start Speaking My Craft
+        </button>
+        <button class="btn-demo-trigger" style="background:rgba(255,255,255,0.15);color:#fff;padding:12px 20px;font-size:14.5px;" onclick="runSmartDemoMode()">
+          <span>⚡</span> 1-Click Guided Demo
+        </button>
+      </div>
+    </div>
+
+    <!-- STATS SUMMARY -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:16px;margin-bottom:24px;">
+      <div class="card" style="display:flex;align-items:center;gap:14px;padding:18px;">
+        <div style="font-size:28px;background:var(--terracotta-subtle);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🏺</div>
+        <div>
+          <div style="font-family:var(--font-accent);font-size:24px;font-weight:700;">84 Languages</div>
+          <div style="font-size:12.5px;color:var(--charcoal-muted);">22 Indian + Global Dialects</div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:14px;padding:18px;">
+        <div style="font-size:28px;background:var(--forest-subtle);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🛡️</div>
+        <div>
+          <div style="font-family:var(--font-accent);font-size:24px;font-weight:700;">Claim Guard</div>
+          <div style="font-size:12.5px;color:var(--charcoal-muted);">Unverified Claim Protection</div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:14px;padding:18px;">
+        <div style="font-size:28px;background:var(--gold-glow);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;">⚖️</div>
+        <div>
+          <div style="font-family:var(--font-accent);font-size:24px;font-weight:700;">Fair Wage AI</div>
+          <div style="font-size:12.5px;color:var(--charcoal-muted);">Artisan Labor Compensation</div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:14px;padding:18px;">
+        <div style="font-size:28px;background:var(--terracotta-subtle);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;">💬</div>
+        <div>
+          <div style="font-family:var(--font-accent);font-size:24px;font-weight:700;">Bounded Q&amp;A</div>
+          <div style="font-size:12.5px;color:var(--charcoal-muted);">Zero-Hallucination Replies</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 2. CREATE LISTING (THE HERO VOICE WORKFLOW) -->
+  <!-- ========================================== -->
+  <section class="view-screen" id="view-create">
+    <div class="next-step-guide">
+      <div>
+        <strong>STEP 1 OF 3: SPEAK OR TYPE YOUR PRODUCT STORY</strong>
+        <span>Talk freely about what you made, how long it took, the materials, and colors.</span>
+      </div>
+      <span style="font-size:12px;color:var(--forest);font-weight:700;">Voice Engine: Active</span>
+    </div>
+
+    <div class="card">
+      <!-- LANGUAGE PREFERENCE SELECTOR INLINE -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2>Speak About Your Craft</h2>
+          <p class="card-subtitle">Karigar AI understands regional dialects, mixed phrases, and craft terminology.</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-voice-ctrl" onclick="openLanguageModal('voice')">
+            🗣️ Dialect: <strong id="voiceLangInlineDisplay">Hindi (हिन्दी)</strong> (Change)
+          </button>
+        </div>
+      </div>
+
+      <!-- VOICE CAPABILITY NOTICE -->
+      <div id="voiceCapabilityNotice" style="display:none;background:#FFF8E1;border:1px solid #FFE082;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;color:#856404;margin-bottom:14px;"></div>
+
+      <!-- VOICE HERO RECORDING CONTAINER -->
+      <div class="voice-hero-box">
+        <button class="mic-hero-btn" id="heroMicBtn" onclick="toggleVoice()" title="Tap to Speak">
+          🎤
+        </button>
+        <div style="margin-top:14px;">
+          <span class="voice-status-pill ready" id="voiceStatusPill">● Ready to Listen</span>
+        </div>
+        <div style="font-size:15px;font-weight:700;margin-top:8px;" id="voiceInstructionText">
+          Tap the microphone and speak naturally
+        </div>
+        <div class="reassure-banner">
+          "Speak naturally in your mother tongue. No professional English required."
+        </div>
+        <div style="font-family:var(--font-accent);font-size:18px;font-weight:700;margin-top:10px;color:var(--forest);" id="recordingDuration">
+          00:00
+        </div>
+        <div class="voice-controls-row">
+          <button type="button" class="btn-voice-ctrl" onclick="stopVoice()">⏹️ Stop</button>
+          <button type="button" class="btn-voice-ctrl" onclick="retryVoice()">↻ Retry</button>
+          <button type="button" class="btn-voice-ctrl" onclick="clearTranscript()">🗑️ Clear</button>
+        </div>
+      </div>
+
+      <!-- EDITABLE LIVE TRANSCRIPTION TEXTAREA -->
+      <div style="margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <label style="font-size:13px;font-weight:700;color:var(--charcoal-muted);" for="productTranscriptBox">
+            Live Spoken Transcription &amp; Editable Description
+          </label>
+          <span style="font-size:12px;color:var(--charcoal-muted);" id="transcriptWordCount">0 words</span>
+        </div>
+        <textarea id="productTranscriptBox" class="textarea-custom" style="width:100%;min-height:100px;padding:12px;border:1px solid var(--border-sand);border-radius:var(--radius-sm);font-size:14.5px;line-height:1.6;"
+          placeholder="e.g. यह 3 दिन में बना हुआ खुर्जा का 10 इंच का नीला फूलदान है। इसपर असली क्वार्ट्ज पत्थर का पाउडर और प्राकृतिक कोबाल्ट ऑक्साइड रंग लगा है। यह 100% natural है और लिविंग रूम सजावट और उपहार के लिए उत्तम है।"
+          oninput="updateCharCount()"></textarea>
+      </div>
+
+      <!-- MULTI-PHOTO UPLOAD & QUALITY COACH -->
+      <div style="border-top:1px solid var(--border-subtle);padding-top:18px;margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <label style="font-size:13px;font-weight:700;color:var(--charcoal-muted);">
+            Product Photos (Up to 5 images: Front, Side, Texture, Workshop)
+          </label>
+          <button type="button" class="btn-field-act" onclick="analyzeMultiPhotosTogether()">🔍 Scan Gallery Characteristics</button>
+        </div>
+        <div style="border:1.5px dashed var(--border-sand);padding:18px;border-radius:var(--radius-md);text-align:center;background:var(--bg-sand);cursor:pointer;" onclick="document.getElementById('multiPhotoInput').click()">
+          <span style="font-size:28px;">📷</span>
+          <div style="font-size:13px;font-weight:700;color:var(--forest);margin-top:4px;">Tap to select or capture up to 5 craft photos</div>
+          <div style="font-size:11.5px;color:var(--charcoal-muted);">Front view, close-up texture, side angle, and base mark</div>
+          <input type="file" id="multiPhotoInput" multiple accept="image/*" style="display:none;" onchange="handleMultiPhotoUpload(event)">
+        </div>
+
+        <div class="multi-photo-grid" id="multiPhotoGalleryGrid"></div>
+
+        <!-- PHOTO QUALITY COACH TIPS BANNER -->
+        <div class="photo-coach-box">
+          <div style="font-size:12.5px;font-weight:700;color:var(--forest);margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+            <span>📸</span> Photo Quality Coach Suggestions
+          </div>
+          <div id="photoCoachTipsContainer">
+            <div class="coach-tip-item">📷 Upload at least 1 clear photo of your craft.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION: UNDERSTAND BOARD BUTTON -->
+      <button type="button" class="btn-hero-primary" id="btnUnderstand" style="width:100%;justify-content:center;padding:15px;" onclick="processSpokenUnderstanding()">
+        <span>⚡</span> Understand My Craft &amp; Verify Attributes
+      </button>
+
+      <!-- CLAIM GUARD WARNING AREA -->
+      <div id="claimGuardContainer" style="display:none;"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- AI UNDERSTANDING BOARD SECTION -->
+    <!-- ========================================== -->
+    <div class="understanding-board" id="understandingBoardSection" style="display:none;">
+      <div class="board-header">
+        <div>
+          <span style="font-size:11.5px;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:0.06em;">Step 2 of 3 • Trust Verification</span>
+          <h3>"Here's what Karigar AI understood"</h3>
+          <p style="font-size:13px;color:var(--charcoal-muted);">
+            Every field has a transparent data source. Only confirmed facts become trusted Digital Twin information.
+          </p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-demo-trigger" onclick="confirmAllAndCreateTwin()">
+            ✓ Confirm All &amp; Create Digital Twin →
+          </button>
+        </div>
+      </div>
+
+      <div class="board-fields-grid" id="boardFieldsGrid">
+        <!-- Rendered dynamically with 10 structured fields -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 3. CRAFT DIGITAL TWIN SCREEN -->
+  <!-- ========================================== -->
+  <section class="view-screen" id="view-twin">
+    <div class="next-step-guide">
+      <div>
+        <strong>CRAFT DIGITAL TWIN: THE SINGLE SOURCE OF TRUTH</strong>
+        <span>Centralized product identity powering all marketplace channels, translations, and customer replies.</span>
+      </div>
+      <button class="btn-demo-trigger" onclick="showView('studio')">Open in AI Listing Studio →</button>
+    </div>
+
+    <!-- 9-STAGE CRAFT JOURNEY PROGRESSION STEPPER -->
+    <div class="card" style="padding:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--charcoal-muted);margin-bottom:6px;text-transform:uppercase;">
+        Craft Journey Progression
+      </div>
+      <div class="journey-stepper">
+        <div class="journey-step completed"><span class="journey-dot">1</span> Idea</div>
+        <div class="journey-line"></div>
+        <div class="journey-step completed"><span class="journey-dot">2</span> Materials</div>
+        <div class="journey-line"></div>
+        <div class="journey-step completed"><span class="journey-dot">3</span> Crafting</div>
+        <div class="journey-line"></div>
+        <div class="journey-step completed"><span class="journey-dot">4</span> Finished</div>
+        <div class="journey-line"></div>
+        <div class="journey-step active"><span class="journey-dot">5</span> AI Understanding</div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><span class="journey-dot">6</span> Listing</div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><span class="journey-dot">7</span> Pricing</div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><span class="journey-dot">8</span> Marketing</div>
+        <div class="journey-line"></div>
+        <div class="journey-step"><span class="journey-dot">9</span> Published</div>
+      </div>
+    </div>
+
+    <!-- LISTING HEALTH AUDIT -->
+    <div id="healthAuditContainer"></div>
+
+    <!-- PRODUCT VARIANTS MANAGER -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div>
+          <h3>Product Variants (Sizes, Colors, Editions)</h3>
+          <p class="card-subtitle">One Craft Digital Twin can hold multiple variations with distinct prices.</p>
+        </div>
+        <button type="button" class="btn-demo-trigger" onclick="addProductVariant()">+ Add Variant</button>
+      </div>
+      <div id="variantsListContainer"></div>
+    </div>
+
+    <!-- VERSION HISTORY TIMELINE -->
+    <div class="card">
+      <div style="margin-bottom:14px;">
+        <h3>Revision Version History</h3>
+        <p class="card-subtitle">Meaningful audit trail of product edits. Restore any previous revision with 1 click.</p>
+      </div>
+      <div id="versionTimelineContainer"></div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. AI LISTING STUDIO SCREEN -->
+  <!-- ========================================== -->
+  <section class="view-screen" id="view-studio">
+    <div class="next-step-guide">
+      <div>
+        <strong>STEP 3 OF 3: AI LISTING STUDIO &amp; VOICE EDITING</strong>
+        <span>Refine your title, story description, and bullet points using voice commands or 1-click transformers.</span>
+      </div>
+      <button class="btn-demo-trigger" id="btnVoiceEditListing" onclick="triggerVoiceEdit()">
+        <span>🎙️</span> Voice Edit Listing
+      </button>
+    </div>
+
+    <div class="card">
+      <!-- 1-CLICK AI TRANSFORMERS -->
+      <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;border-bottom:1px solid var(--border-subtle);padding-bottom:12px;">
+        <span style="font-size:12px;font-weight:700;color:var(--charcoal-muted);align-self:center;">1-Click AI Refiners:</span>
+        <button type="button" class="btn-field-act" onclick="transformListing('shorten')">✂️ Make Shorter</button>
+        <button type="button" class="btn-field-act" onclick="transformListing('expand')">📜 Expand Story</button>
+        <button type="button" class="btn-field-act" onclick="transformListing('simpler')">🪶 Make Simpler</button>
+        <button type="button" class="btn-field-act" onclick="transformListing('attractive')">💎 Make Attractive</button>
+        <button type="button" class="btn-field-act" onclick="transformListing('marketplace')">🏷️ Marketplace Ready</button>
+      </div>
+
+      <!-- VARIATION SWITCHER -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button type="button" class="var-tab-btn active" id="varTabStudio0" onclick="switchStudioVariation(0)">Option 1: Heritage Story</button>
+        <button type="button" class="var-tab-btn" id="varTabStudio1" onclick="switchStudioVariation(1)">Option 2: Marketplace Direct</button>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="form-label" for="studioListingTitle">SEO Marketplace Title</label>
+        <input class="input-custom" id="studioListingTitle" style="font-size:16px;font-weight:700;" value="Handcrafted Khurja Ceramic Pottery Floral Vase">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div>
+          <label class="form-label" for="studioPriceTag">Suggested Fair Price</label>
+          <input class="input-custom" id="studioPriceTag" style="font-weight:700;color:var(--forest);" value="₹1,850 – ₹2,450">
+        </div>
+        <div>
+          <label class="form-label" for="studioShortDesc">Short Summary (Mobile / Quick Scan)</label>
+          <input class="input-custom" id="studioShortDesc" value="Individually hand-shaped from pure quartz powder and cobalt blue glaze over 3 days.">
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="form-label" for="studioFullDesc">Full Heritage Story &amp; Description</label>
+        <textarea class="textarea-custom" id="studioFullDesc" style="min-height:120px;"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label class="form-label">5-Point Amazon &amp; Etsy Feature Bullets</label>
+        <div id="studioBulletsContainer"></div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label class="form-label">Suggested SEO Tags</label>
+        <div id="studioTagsCloud"></div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" class="btn-hero-primary" onclick="showToast('✓ Listing copied to clipboard!')">📋 Copy Verified Listing</button>
+        <button type="button" class="btn-voice-ctrl" onclick="showView('marketing')">📣 Open in Marketing Studio</button>
+        <button type="button" class="btn-voice-ctrl" onclick="showView('pricing')">⚖️ Adjust Fair Price</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. FAIR PRICE ASSISTANT SCREEN -->
+  <!-- ========================================== -->
+  <section class="view-screen" id="view-pricing">
+    <div class="card">
+      <div class="card-header">
+        <h2>Transparent Fair Price Assistant</h2>
+        <p class="card-subtitle">Ensure your time, ancestral skill, and materials are fairly rewarded. Clearly labeled AI-assisted estimate.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;">
+        <!-- Inputs -->
+        <div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label" for="calcMatCost">Raw Material Cost (₹)</label>
+            <input class="input-custom" id="calcMatCost" type="number" value="350" oninput="calculateFairPrice()">
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label" for="calcLaborDays">Labor Time Invested (Days)</label>
+            <input class="input-custom" id="calcLaborDays" type="number" step="0.5" value="3" oninput="calculateFairPrice()">
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label" for="calcDailyWage">Daily Fair Wage Benchmark (₹/day)</label>
+            <input class="input-custom" id="calcDailyWage" type="number" value="550" oninput="calculateFairPrice()">
+            <span style="font-size:11.5px;color:var(--charcoal-muted);">Regional skilled artisan benchmark: ₹500 - ₹750/day.</span>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label" for="calcOverhead">Overheads (Kiln Firing, Tools, Packing) (₹)</label>
+            <input class="input-custom" id="calcOverhead" type="number" value="150" oninput="calculateFairPrice()">
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label" for="calcMultiplier">Craft Complexity Markup</label>
+            <select class="select-custom" id="calcMultiplier" onchange="calculateFairPrice()">
+              <option value="1.2">Standard Workshop Piece (+20%)</option>
+              <option value="1.35" selected>Master Karigar Heritage Piece (+35%)</option>
+              <option value="1.5">Intricate Heirloom / GI Certified (+50%)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Calculated Fair Outputs -->
+        <div>
+          <div style="background:var(--forest);color:#fff;padding:24px;border-radius:var(--radius-md);text-align:center;box-shadow:var(--shadow-sm);">
+            <div style="font-size:11.5px;color:var(--gold-accent);text-transform:uppercase;font-weight:700;">AI-Assisted Fair Retail Price</div>
+            <div style="font-family:var(--font-accent);font-size:32px;font-weight:700;" id="calcFairRetailDisplay">₹1,990 – ₹2,450</div>
+            <div style="font-size:12px;opacity:0.9;margin-top:4px;">Direct Marketplace Consumer Price</div>
+          </div>
+
+          <div style="background:var(--bg-sand);border:1px solid var(--border-sand);padding:16px;border-radius:var(--radius-md);margin-top:14px;font-size:13px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span>Direct Material &amp; Overheads:</span>
+              <strong id="calcDirectCostDisplay">₹500</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span>Guaranteed Artisan Labor Earnings:</span>
+              <strong style="color:var(--forest);" id="calcLaborDisplay">₹1,650 (3 days @ ₹550/day)</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span>Cluster Wholesale Benchmark:</span>
+              <strong id="calcWholesaleDisplay">₹1,470</strong>
+            </div>
+          </div>
+
+          <button type="button" class="btn-hero-primary" style="width:100%;margin-top:14px;justify-content:center;" onclick="applyCalculatedPriceToListing()">
+            Apply This Fair Price to Active Listing
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. MARKETING STUDIO SCREEN -->
+  <!-- ========================================== -->
+  <section class="view-screen" id="view-marketing">
+    <div class="card">
+      <div class="card-header">
+        <h2>AI Marketing Studio — Multi-Channel Launch</h2>
+        <p class="card-subtitle">Ready-to-post messages for WhatsApp buyers, Instagram art lovers, and marketplace bullet points.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:18px;">
+        <!-- WhatsApp -->
+        <div style="background:#fff;border:1px solid var(--border-sand);border-radius:var(--radius-md);padding:18px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;">
+              <span>💬</span> WhatsApp Business Catalog Message
+            </div>
+            <div style="background:var(--bg-sand);padding:12px;border-radius:var(--radius-sm);font-size:13px;line-height:1.55;margin:12px 0;white-space:pre-wrap;max-height:220px;overflow-y:auto;" id="mktgWhatsappText">...</div>
+          </div>
+          <button type="button" class="btn-voice-ctrl" onclick="showToast('Copied WhatsApp copy!')">📋 Copy WhatsApp Message</button>
+        </div>
+
+        <!-- Instagram -->
+        <div style="background:#fff;border:1px solid var(--border-sand);border-radius:var(--radius-md);padding:18px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;">
+              <span>📸</span> Instagram Heritage Story &amp; Hashtags
+            </div>
+            <div style="background:var(--bg-sand);padding:12px;border-radius:var(--radius-sm);font-size:13px;line-height:1.55;margin:12px 0;white-space:pre-wrap;max-height:220px;overflow-y:auto;" id="mktgInstaText">...</div>
+          </div>
+          <button type="button" class="btn-voice-ctrl" onclick="showToast('Copied Instagram caption!')">📋 Copy Instagram Post</button>
+        </div>
+
+        <!-- Festival Campaign -->
+        <div style="background:#fff;border:1px solid var(--border-sand);border-radius:var(--radius-md);padding:18px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;">
+              <span>🪔</span> Festive Heritage Promotion (Diwali / Festive)
+            </div>
+            <div style="background:var(--bg-sand);padding:12px;border-radius:var(--radius-sm);font-size:13px;line-height:1.55;margin:12px 0;white-space:pre-wrap;max-height:220px;overflow-y:auto;" id="mktgFestivalText">...</div>
+          </div>
+          <button type="button" class="btn-voice-ctrl" onclick="showToast('Copied Festive campaign!')">📋 Copy Festive Promo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMER REPLY ASSISTANT -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Customer Reply Assistant (Fact-Bounded Protection)</h2>
+        <p class="card-subtitle">Answers buyer questions strictly from verified Digital Twin facts. Refuses to hallucinate unknown delivery dates or certifications.</p>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="font-size:12px;color:var(--charcoal-muted);align-self:center;">Try sample buyer questions:</span>
+        <button type="button" class="btn-field-act" onclick="askSampleQuestion('What material is this made from?')">What material is this made from?</button>
+        <button type="button" class="btn-field-act" onclick="askSampleQuestion('How long does it take to make?')">How long does it take to make?</button>
+        <button type="button" class="btn-field-act" onclick="askSampleQuestion('Can you deliver by tomorrow to London?')">Can you deliver by tomorrow to London?</button>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-bottom:14px;">
+        <input class="input-custom" id="customerQuestionInput" placeholder="Paste or type buyer question here...">
+        <button type="button" class="btn-hero-primary" onclick="submitCustomerInquiry()">Answer</button>
+      </div>
+
+      <div style="background:var(--bg-sand);border:1px solid var(--border-sand);padding:16px;border-radius:var(--radius-sm);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <strong style="font-size:13px;">AI Artisan Response:</strong>
+          <span class="source-badge verified" id="customerReplySourceBadge">Verified Facts Guard</span>
+        </div>
+        <p id="customerReplyOutput" style="font-size:14px;color:var(--charcoal);line-height:1.5;">
+          Paste a buyer question above to receive a polite, fact-verified reply.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 7. CRAFT LIBRARY (INVENTORY) -->
+  <!-- ========================================== -->
+  <section class="view-screen" id="view-products">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2>Craft Library &amp; Verified Inventory</h2>
+          <p class="card-subtitle">All your product Digital Twins safely preserved on your device and server.</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-voice-ctrl" onclick="exportCSV()">📊 Export All as CSV</button>
+          <button type="button" class="btn-hero-primary" onclick="showView('create')">+ New Craft</button>
+        </div>
+      </div>
+
+      <div class="products-list-grid" id="craftLibraryGrid"></div>
+    </div>
+  </section>
+
+<!-- ========================================== -->
+<!-- 8. ARTISAN PROFILE SCREEN -->
+<!-- ========================================== -->
+<section class="view-screen" id="view-profile">
+  <div class="card">
+    <div id="karigarProfileContent">
+      <!-- Logged-in user's profile is rendered here by app.js -->
+    </div>
+  </div>
+</section>
+
+  <!-- ========================================== -->
+  <!-- 80+ LANGUAGE SEARCH MODAL & DRAWER -->
+  <!-- ========================================== -->
+  <div class="lang-modal-overlay" id="langModalOverlay" onclick="if(event.target===this) closeLanguageModal()">
+    <div class="lang-modal-card">
+      <div class="lang-modal-header">
+        <h3 id="langModalTitle" style="font-size:18px;">Select Language (80+ Languages)</h3>
+        <button type="button" class="btn-field-act" onclick="closeLanguageModal()" style="font-size:16px;">×</button>
+      </div>
+      <div class="lang-modal-search">
+        <input class="lang-search-input" id="langSearchInput" placeholder="🔍 Search by English name, native script (हिन्दी, தமிழ்), or language code..." oninput="searchLanguages(this.value)">
+      </div>
+      <div class="lang-categories-row" id="langCategoriesRow"></div>
+      <div class="lang-items-grid" id="langItemsGrid"></div>
+    </div>
+  </div>
+
+  <!-- CRAFT MEMORY MODAL -->
+  <div class="lang-modal-overlay" id="craftMemoryModal" onclick="if(event.target===this) closeMemoryModal()">
+    <div class="lang-modal-card" style="max-width:540px;">
+      <div class="lang-modal-header">
+        <h3>🧠 Artisan Craft Memory Settings</h3>
+        <button type="button" class="btn-field-act" onclick="closeMemoryModal()">×</button>
+      </div>
+      <div style="padding:20px;overflow-y:auto;">
+        <p style="font-size:13px;color:var(--charcoal-muted);margin-bottom:14px;">
+          With your explicit confirmation, Karigar AI remembers your recurring craft preferences so you don't have to repeat them for each listing.
+        </p>
+        <div style="margin-bottom:12px;">
+          <label class="form-label">Primary Craft Cluster</label>
+          <input class="input-custom" id="memClusterInput">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="form-label">Frequently Used Materials (comma separated)</label>
+          <input class="input-custom" id="memMaterialsInput">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="form-label">Default Daily Wage Benchmark (₹/day)</label>
+          <input class="input-custom" id="memWageInput" type="number">
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="form-label">Artisan Heritage Lineage Story</label>
+          <textarea class="textarea-custom" id="memStoryInput"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-hero-primary" style="flex:1;justify-content:center;" onclick="saveMemorySettings()">Save Craft Memory</button>
+          <button type="button" class="btn-voice-ctrl" onclick="closeMemoryModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-msg" id="toastMsg">✓ Action completed!</div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:40px;text-align:center;padding:24px 0;border-top:1px solid var(--border-subtle);font-size:12.5px;color:var(--charcoal-muted);">
+    <div style="font-family:var(--font-display);font-style:italic;color:var(--terracotta);font-size:14px;margin-bottom:4px;">
+      "हाथ का हुनर, भारत की पहचान — Karigar AI"
+    </div>
+    <p>Voice-First Multilingual Listing Agent for Indian Artisans • Agentic AI For Billions</p>
+  </footer>
+</div>
+
+<!-- SCRIPTS -->
+<script src="/js/languages.js"></script>
+<script src="/js/digitalTwin.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
